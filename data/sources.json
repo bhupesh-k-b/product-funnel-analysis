@@ -1,0 +1,15 @@
+{
+  "publisher": "Retailrocket",
+  "source_page": "https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset",
+  "retrieved_on": "2026-10-15",
+  "license_note": "CC BY-NC-SA 4.0",
+  "raw_data_redistributed": false,
+  "files": [
+    {
+      "filename": "events.csv",
+      "download_url": "https://www.kaggle.com/api/v1/datasets/download/retailrocket/ecommerce-dataset/events.csv",
+      "sha256": "3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7",
+      "bytes": 94237913
+    }
+  ]
+}

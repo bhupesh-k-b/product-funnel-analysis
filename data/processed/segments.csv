@@ -1,0 +1,7 @@
+feature,segment,users,later_buyers,later_purchase_rate
+First-day cart activity,Cart added,23568,215,0.009122539035980991
+First-day cart activity,No cart,1315477,722,0.0005488503409789757
+First-day product breadth,0-1 products,1137032,479,0.00042127222452842134
+First-day product breadth,2+ products,202013,458,0.002267180824996411
+First-day product views,0-1 views,1040158,330,0.0003172594932692918
+First-day product views,2+ views,298887,607,0.0020308678530682163

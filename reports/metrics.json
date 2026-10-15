@@ -1,0 +1,9 @@
+{
+  "events": 2755641,
+  "visitors": 1407580,
+  "start_ms": 1430622004384,
+  "end_ms": 1442545187788,
+  "source_rows": 2756101,
+  "duplicate_events_removed": 460,
+  "eligible_journeys": 2042310
+}

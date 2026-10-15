@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='utf-8'?>
+<workbook version="10.5" source-platform="mac" original-version="10.5">
+  <preferences />
+  <datasources>
+    <datasource caption="Funnel" inline="true" name="funnel" version="10.5">
+      <connection directory="Data" filename="funnel.csv" server="" class="textscan">
+        <relation name="funnel.csv" table="[funnel.csv]" type="table">
+          <columns header="yes" separator="," locale="en_US">
+            <column datatype="integer" name="stage_order" ordinal="0" />
+            <column datatype="string" name="stage" ordinal="1" />
+            <column datatype="integer" name="users" ordinal="2" />
+            <column datatype="real" name="overall_rate" ordinal="3" />
+            <column datatype="real" name="step_rate" ordinal="4" />
+            <column datatype="integer" name="dropped_users" ordinal="5" />
+          </columns>
+        </relation>
+      </connection>
+      <column datatype="integer" name="[stage_order]" role="dimension" type="ordinal" />
+      <column datatype="string" name="[stage]" role="dimension" type="nominal" />
+      <column datatype="integer" name="[users]" role="measure" type="quantitative" />
+      <column datatype="real" name="[overall_rate]" role="measure" type="quantitative" default-format="p0.1%" />
+      <column datatype="real" name="[step_rate]" role="measure" type="quantitative" default-format="p0.1%" />
+      <column datatype="integer" name="[dropped_users]" role="measure" type="quantitative" />
+    </datasource>
+    <datasource caption="Retention" inline="true" name="retention" version="10.5">
+      <connection directory="Data" filename="retention.csv" server="" class="textscan">
+        <relation name="retention.csv" table="[retention.csv]" type="table">
+          <columns header="yes" separator="," locale="en_US">
+            <column datatype="string" name="cohort_week" ordinal="0" />
+            <column datatype="integer" name="week_number" ordinal="1" />
+            <column datatype="integer" name="cohort_size" ordinal="2" />
+            <column datatype="integer" name="active_users" ordinal="3" />
+            <column datatype="real" name="retention_rate" ordinal="4" />
+            <column datatype="integer" name="fully_observed" ordinal="5" />
+            <column datatype="integer" name="complete_acquisition_week" ordinal="6" />
+          </columns>
+        </relation>
+      </connection>
+      <column datatype="string" name="[cohort_week]" role="dimension" type="nominal" />
+      <column datatype="integer" name="[week_number]" role="dimension" type="ordinal" />
+      <column datatype="integer" name="[cohort_size]" role="measure" type="quantitative" />
+      <column datatype="integer" name="[active_users]" role="measure" type="quantitative" />
+      <column datatype="real" name="[retention_rate]" role="measure" type="quantitative" default-format="p0.1%" />
+      <column datatype="integer" name="[fully_observed]" role="dimension" type="ordinal" />
+      <column datatype="integer" name="[complete_acquisition_week]" role="dimension" type="ordinal" />
+    </datasource>
+    <datasource caption="Segments" inline="true" name="segments" version="10.5">
+      <connection directory="Data" filename="segments.csv" server="" class="textscan">
+        <relation name="segments.csv" table="[segments.csv]" type="table">
+          <columns header="yes" separator="," locale="en_US">
+            <column datatype="string" name="feature" ordinal="0" />
+            <column datatype="string" name="segment" ordinal="1" />
+            <column datatype="integer" name="users" ordinal="2" />
+            <column datatype="integer" name="later_buyers" ordinal="3" />
+            <column datatype="real" name="later_purchase_rate" ordinal="4" />
+          </columns>
+        </relation>
+      </connection>
+      <column datatype="string" name="[feature]" role="dimension" type="nominal" />
+      <column datatype="string" name="[segment]" role="dimension" type="nominal" />
+      <column datatype="integer" name="[users]" role="measure" type="quantitative" />
+      <column datatype="integer" name="[later_buyers]" role="measure" type="quantitative" />
+      <column datatype="real" name="[later_purchase_rate]" role="measure" type="quantitative" default-format="p0.1%" />
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name="Conversion funnel">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Conversion funnel</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Funnel" name="funnel" />
+          </datasources>
+          <datasource-dependencies datasource="funnel">
+            <column datatype="string" name="[stage]" role="dimension" type="nominal" />
+            <column-instance column="[stage]" derivation="None" name="[none:stage:nk]" pivot="key" type="nominal" />
+            <column datatype="integer" name="[users]" role="measure" type="quantitative" />
+            <column-instance column="[users]" derivation="Sum" name="[sum:users:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style />
+        <panes>
+          <pane>
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <encodings>
+              <text column="[funnel].[sum:users:qk]" />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[funnel].[none:stage:nk]</rows>
+        <cols>[funnel].[sum:users:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Weekly cohort retention">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Weekly cohort retention</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Retention" name="retention" />
+          </datasources>
+          <datasource-dependencies datasource="retention">
+            <column datatype="string" name="[cohort_week]" role="dimension" type="nominal" />
+            <column-instance column="[cohort_week]" derivation="None" name="[none:cohort_week:nk]" pivot="key" type="nominal" />
+            <column datatype="integer" name="[week_number]" role="dimension" type="ordinal" />
+            <column-instance column="[week_number]" derivation="None" name="[none:week_number:ok]" pivot="key" type="ordinal" />
+            <column datatype="real" name="[retention_rate]" role="measure" type="quantitative" />
+            <column-instance column="[retention_rate]" derivation="Avg" name="[avg:retention_rate:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style />
+        <panes>
+          <pane>
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Square" />
+            <encodings>
+              <color column="[retention].[avg:retention_rate:qk]" />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[retention].[none:cohort_week:nk]</rows>
+        <cols>[retention].[none:week_number:ok]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Early behavior and later purchase">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Early behavior and later purchase</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Segments" name="segments" />
+          </datasources>
+          <datasource-dependencies datasource="segments">
+            <column datatype="string" name="[segment]" role="dimension" type="nominal" />
+            <column-instance column="[segment]" derivation="None" name="[none:segment:nk]" pivot="key" type="nominal" />
+            <column datatype="real" name="[later_purchase_rate]" role="measure" type="quantitative" />
+            <column-instance column="[later_purchase_rate]" derivation="Avg" name="[avg:later_purchase_rate:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style />
+        <panes>
+          <pane>
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <encodings>
+              <text column="[segments].[avg:later_purchase_rate:qk]" />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[segments].[none:segment:nk]</rows>
+        <cols>[segments].[avg:later_purchase_rate:qk]</cols>
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="Product conversion and retention">
+      <style />
+      <size maxheight="900" maxwidth="1400" minheight="900" minwidth="1400" />
+      <zones>
+        <zone type="layout-basic" h="100000" w="100000" x="0" y="0" id="0">
+          <zone h="43000" w="48000" x="1000" y="1000" id="1" name="Conversion funnel">
+            <zone-style>
+              <format attr="margin" value="8" />
+            </zone-style>
+          </zone>
+          <zone h="53000" w="98000" x="1000" y="46000" id="2" name="Weekly cohort retention">
+            <zone-style>
+              <format attr="margin" value="8" />
+            </zone-style>
+          </zone>
+          <zone h="43000" w="48000" x="51000" y="1000" id="3" name="Early behavior and later purchase">
+            <zone-style>
+              <format attr="margin" value="8" />
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>
